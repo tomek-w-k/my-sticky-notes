@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>icons/blue_sticky_note.png</file>
+        <file>icons/green_sticky_note.png</file>
+        <file>icons/main_icon.png</file>
+        <file>icons/orange_sticky_note.png</file>
+        <file>icons/purple_sticky_note.png</file>
+        <file>icons/red_sticky_note.png</file>
+        <file>icons/yellow_sticky_note.png</file>
+    </qresource>
+</RCC>
