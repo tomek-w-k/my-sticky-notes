@@ -13,22 +13,26 @@
 
 
 namespace Ui {
-class Dialog;
+    class Dialog;
 }
 
-class Dialog : public QDialog
-{
+class Dialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit Dialog(QWidget *parent = 0);
+    explicit Dialog(QList<QDialog*>* windowList, QWidget *parent = 0);
     ~Dialog();
     void contextMenuEvent(QContextMenuEvent* event);
+
+private:
+    void setRandomWindowIcon();
+    void setMainImage();
 
 private slots:
     void on_newFromClipboardAction_triggered();
 
 private:
+    QList<QDialog*>* windowList;
     Ui::Dialog *ui;
     QClipboard* clipboard;
     Dialog* dialog;
