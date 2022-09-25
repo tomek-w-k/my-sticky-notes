@@ -2,22 +2,25 @@
 #include "ui_dialog.h"
 
 
-Dialog::Dialog(QList<QDialog*>* windowList, QWidget *parent) : QDialog(parent), ui(new Ui::Dialog) {
+Dialog::Dialog() : ui(new Ui::Dialog) {
     ui->setupUi(this);
 
     this->setAttribute(Qt::WA_DeleteOnClose);
-    this->windowList = windowList;
+    this->windowList = getWindowList();
     windowList->append(this);
+    this->graphicsScene = new QGraphicsScene(this);
 
     setRandomWindowIcon();
     setMainImage();
 }
 
-Dialog::~Dialog() {
-    int itemNo = this->windowList->indexOf(this);
-    this->windowList->remove(itemNo);
+Dialog::~Dialog() {    
+    this->windowList->removeOne(this);
 
     delete ui;
+
+    if (this->windowList->isEmpty())
+        delete this->windowList;
 }
 
 void Dialog::contextMenuEvent(QContextMenuEvent *event) {
@@ -26,8 +29,7 @@ void Dialog::contextMenuEvent(QContextMenuEvent *event) {
     contextMenu.exec(event->globalPos());
 }
 
-void Dialog::setRandomWindowIcon()
-{
+void Dialog::setRandomWindowIcon() {
     int iconNo = rand() % ((6 + 1) - 1) + 1;
     static int prevIconNo = iconNo;
 
@@ -59,16 +61,20 @@ void Dialog::setRandomWindowIcon()
     }
 }
 
-void Dialog::setMainImage()
-{
-    QImage image = QGuiApplication::clipboard()->image();
-    ui->imageFromClipboardLabel->setPixmap(QPixmap::fromImage(image));
+void Dialog::setMainImage() {
+    this->graphicsScene->addPixmap(QGuiApplication::clipboard()->pixmap());
+    ui->graphicsView->setScene(this->graphicsScene);
+}
 
-    this->layout()->setSizeConstraint(QLayout::SetFixedSize);
+QList<QDialog*>* Dialog::getWindowList() {
+    if (!this->windowList)
+        return new QList<QDialog*>;
+
+    return this->windowList;
 }
 
 void Dialog::on_newFromClipboardAction_triggered() {
-    dialog = new Dialog(this->windowList);
+    dialog = new Dialog;
     dialog->show();
 }
 

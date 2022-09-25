@@ -10,6 +10,7 @@
 #include <QString>
 #include <QContextMenuEvent>
 #include <QMenu>
+#include <QGraphicsScene>
 
 
 namespace Ui {
@@ -20,22 +21,24 @@ class Dialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit Dialog(QList<QDialog*>* windowList, QWidget *parent = 0);
+    explicit Dialog();
     ~Dialog();
     void contextMenuEvent(QContextMenuEvent* event);
 
 private:
     void setRandomWindowIcon();
     void setMainImage();
+    QList<QDialog*>* getWindowList();
 
 private slots:
     void on_newFromClipboardAction_triggered();
 
 private:
-    QList<QDialog*>* windowList;
+    static QList<QDialog*>* windowList;
     Ui::Dialog *ui;
     QClipboard* clipboard;
     Dialog* dialog;
+    QGraphicsScene* graphicsScene;
 };
 
 #endif // DIALOG_H

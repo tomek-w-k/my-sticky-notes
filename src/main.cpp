@@ -3,17 +3,16 @@
 #include <QList>
 
 
+QList<QDialog*>* Dialog::windowList = 0;
+
+
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     a.setApplicationDisplayName(QString("MyStickyNotes"));
-    a.setWindowIcon(QIcon(":/new/prefix1/icons/main_icon2.png"));
+    a.setWindowIcon(QIcon(":/new/prefix1/icons/main_icon2.png"));   
 
-    QList<QDialog*>* windowList = new QList<QDialog*>;
-    Dialog* window = new Dialog(windowList);
+    Dialog* window = new Dialog;
     window->show();
 
-    int appExecResult = a.exec();
-    delete windowList;
-
-    return appExecResult;
+    return a.exec();
 }
