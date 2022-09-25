@@ -11,9 +11,15 @@
 #include <QContextMenuEvent>
 #include <QMenu>
 #include <QGraphicsScene>
+#include <QDir>
 
 #include "dialoginstanceproperties.h"
 
+
+const QString MY_STICKY_NOTES_DIR_RELATIVE = ".my-sticky-notes";
+const QString MY_STICKY_NOTES_DIR_TEMP_RELATIVE = "temp";
+
+using namespace std;
 
 namespace Ui {
     class Dialog;
@@ -31,6 +37,7 @@ private:
     void setRandomWindowIcon();
     void setMainImage();
     QList<DialogInstanceProperties*>* getDialogInstancePropertiesList();
+    optional<QDir> getTempDir();
 
 private slots:
     void on_newFromClipboardAction_triggered();
@@ -42,6 +49,7 @@ private:
     QClipboard* clipboard;
     Dialog* dialog;
     QGraphicsScene* graphicsScene;
+    optional<QDir> tempDirOptional;
 };
 
 #endif // DIALOG_H

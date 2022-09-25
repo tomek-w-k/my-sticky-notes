@@ -10,6 +10,7 @@ Dialog::Dialog() : ui(new Ui::Dialog) {
     this->dialogInstanceProperties = new DialogInstanceProperties(this);
     dialogInstancePropertiesList->append(this->dialogInstanceProperties);
     this->graphicsScene = new QGraphicsScene(this);
+    this->tempDirOptional = getTempDir();
 
     setRandomWindowIcon();
     setMainImage();
@@ -72,6 +73,15 @@ QList<DialogInstanceProperties*> *Dialog::getDialogInstancePropertiesList() {
         return new QList<DialogInstanceProperties*>;
 
     return this->dialogInstancePropertiesList;
+}
+
+optional<QDir> Dialog::getTempDir() {
+    QDir tempDir = QDir::home().filePath(MY_STICKY_NOTES_DIR_RELATIVE);
+    tempDir = tempDir.filePath(MY_STICKY_NOTES_DIR_TEMP_RELATIVE);
+
+    if (tempDir.mkpath(tempDir.path()))
+        return tempDir;
+    else return nullopt;
 }
 
 void Dialog::on_newFromClipboardAction_triggered() {
