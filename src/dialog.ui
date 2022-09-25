@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>258</width>
-    <height>194</height>
+    <width>196</width>
+    <height>159</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -30,7 +30,7 @@
     <number>0</number>
    </property>
    <property name="sizeConstraint">
-    <enum>QLayout::SetFixedSize</enum>
+    <enum>QLayout::SetDefaultConstraint</enum>
    </property>
    <property name="leftMargin">
     <number>0</number>
@@ -60,6 +60,21 @@
      </property>
      <property name="horizontalScrollBarPolicy">
       <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QAbstractScrollArea::AdjustToContents</enum>
+     </property>
+     <property name="interactive">
+      <bool>true</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="transformationAnchor">
+      <enum>QGraphicsView::NoAnchor</enum>
+     </property>
+     <property name="viewportUpdateMode">
+      <enum>QGraphicsView::FullViewportUpdate</enum>
      </property>
     </widget>
    </item>

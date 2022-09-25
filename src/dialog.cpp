@@ -69,8 +69,11 @@ void Dialog::setRandomWindowIcon() {
 }
 
 void Dialog::setMainImage() {
-    this->graphicsScene->addPixmap(QGuiApplication::clipboard()->pixmap());
-    ui->graphicsView->setScene(this->graphicsScene);    
+    QPixmap pixmap = QGuiApplication::clipboard()->pixmap();
+
+    this->window()->setFixedSize(pixmap.size());
+    this->graphicsScene->addPixmap(pixmap);
+    ui->graphicsView->setScene(this->graphicsScene);
 }
 
 QList<DialogInstanceProperties*> *Dialog::getDialogInstancePropertiesList() {

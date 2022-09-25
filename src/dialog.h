@@ -14,6 +14,7 @@
 #include <QDir>
 #include <QFile>
 #include <QMessageBox>
+#include <QDragLeaveEvent>
 
 #include "dialoginstanceproperties.h"
 
