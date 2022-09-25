@@ -1,8 +1,9 @@
 #include "dialoginstanceproperties.h"
 
 
-DialogInstanceProperties::DialogInstanceProperties(QObject* parent) : QObject(parent) {
+DialogInstanceProperties::DialogInstanceProperties(QWidget* parent) : QObject(parent) {
     this->id = QUuid::createUuid();
+    this->ptr = qobject_cast<QDialog*>(parent);
 }
 
 const QUuid &DialogInstanceProperties::getId() const {

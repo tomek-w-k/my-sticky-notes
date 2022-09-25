@@ -6,8 +6,9 @@ Dialog::Dialog() : ui(new Ui::Dialog) {
     ui->setupUi(this);
 
     this->setAttribute(Qt::WA_DeleteOnClose);
-    this->windowList = getWindowList();
-    windowList->append(this);
+    this->dialogInstancePropertiesList = getDialogInstancePropertiesList();
+    this->dialogInstanceProperties = new DialogInstanceProperties(this);
+    dialogInstancePropertiesList->append(this->dialogInstanceProperties);
     this->graphicsScene = new QGraphicsScene(this);
 
     setRandomWindowIcon();
@@ -15,12 +16,12 @@ Dialog::Dialog() : ui(new Ui::Dialog) {
 }
 
 Dialog::~Dialog() {    
-    this->windowList->removeOne(this);
+    this->dialogInstancePropertiesList->removeOne(this->dialogInstanceProperties);
 
     delete ui;
 
-    if (this->windowList->isEmpty())
-        delete this->windowList;
+    if (this->dialogInstancePropertiesList->isEmpty())
+        delete this->dialogInstancePropertiesList;
 }
 
 void Dialog::contextMenuEvent(QContextMenuEvent *event) {
@@ -66,11 +67,11 @@ void Dialog::setMainImage() {
     ui->graphicsView->setScene(this->graphicsScene);
 }
 
-QList<QDialog*>* Dialog::getWindowList() {
-    if (!this->windowList)
-        return new QList<QDialog*>;
+QList<DialogInstanceProperties*> *Dialog::getDialogInstancePropertiesList() {
+    if (!this->dialogInstancePropertiesList)
+        return new QList<DialogInstanceProperties*>;
 
-    return this->windowList;
+    return this->dialogInstancePropertiesList;
 }
 
 void Dialog::on_newFromClipboardAction_triggered() {

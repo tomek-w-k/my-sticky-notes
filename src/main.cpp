@@ -3,7 +3,7 @@
 #include <QList>
 
 
-QList<QDialog*>* Dialog::windowList = 0;
+QList<DialogInstanceProperties*>* Dialog::dialogInstancePropertiesList = 0;
 
 
 int main(int argc, char *argv[]) {

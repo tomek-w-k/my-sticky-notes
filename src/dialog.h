@@ -12,6 +12,8 @@
 #include <QMenu>
 #include <QGraphicsScene>
 
+#include "dialoginstanceproperties.h"
+
 
 namespace Ui {
     class Dialog;
@@ -28,13 +30,14 @@ public:
 private:
     void setRandomWindowIcon();
     void setMainImage();
-    QList<QDialog*>* getWindowList();
+    QList<DialogInstanceProperties*>* getDialogInstancePropertiesList();
 
 private slots:
     void on_newFromClipboardAction_triggered();
 
 private:
-    static QList<QDialog*>* windowList;
+    static QList<DialogInstanceProperties*>* dialogInstancePropertiesList;
+    DialogInstanceProperties* dialogInstanceProperties;
     Ui::Dialog *ui;
     QClipboard* clipboard;
     Dialog* dialog;

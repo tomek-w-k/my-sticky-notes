@@ -2,6 +2,7 @@
 #define DIALOGINSTANCEPROPERTIES_H
 
 #include <QObject>
+#include <QWidget>
 #include <QUuid>
 #include <QDialog>
 
@@ -10,7 +11,7 @@ class DialogInstanceProperties : public QObject {
 
     Q_OBJECT
 public:
-    DialogInstanceProperties(QObject* parent = nullptr);
+    DialogInstanceProperties(QWidget* parent = nullptr);
     const QUuid &getId() const;
     QDialog *getPtr() const;
 

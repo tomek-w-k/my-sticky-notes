@@ -45,7 +45,11 @@
     <number>1</number>
    </property>
    <item>
-    <widget class="QGraphicsView" name="graphicsView"/>
+    <widget class="QGraphicsView" name="graphicsView">
+     <property name="lineWidth">
+      <number>1</number>
+     </property>
+    </widget>
    </item>
   </layout>
   <action name="newFromClipboardAction">
