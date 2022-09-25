@@ -14,12 +14,17 @@ Dialog::Dialog() : ui(new Ui::Dialog) {
 
     setRandomWindowIcon();
     setMainImage();
+    saveMainImageToTempDir();
 }
 
 Dialog::~Dialog() {    
     this->dialogInstancePropertiesList->removeOne(this->dialogInstanceProperties);
 
     delete ui;
+
+    QFile imageBackupFile(this->imageBackupFilePath);
+    if (!imageBackupFile.remove())
+        QMessageBox::warning(this, APP_NAME, CANNOT_REMOVE_IMAGE_BACKUP, QMessageBox::Ok);
 
     if (this->dialogInstancePropertiesList->isEmpty())
         delete this->dialogInstancePropertiesList;
@@ -65,7 +70,7 @@ void Dialog::setRandomWindowIcon() {
 
 void Dialog::setMainImage() {
     this->graphicsScene->addPixmap(QGuiApplication::clipboard()->pixmap());
-    ui->graphicsView->setScene(this->graphicsScene);
+    ui->graphicsView->setScene(this->graphicsScene);    
 }
 
 QList<DialogInstanceProperties*> *Dialog::getDialogInstancePropertiesList() {
@@ -84,9 +89,19 @@ optional<QDir> Dialog::getTempDir() {
     else return nullopt;
 }
 
+void Dialog::saveMainImageToTempDir() {
+    if (this->tempDirOptional) {
+        QString fileName = this->dialogInstanceProperties->getId().toString(QUuid::WithoutBraces) + ".png";
+        this->imageBackupFilePath = tempDirOptional.value().filePath(fileName);
+        QPixmap pixmap = ui->graphicsView->grab();
+
+        if (!pixmap.save(this->imageBackupFilePath))
+            QMessageBox::warning(this, APP_NAME, CANNOT_SAVE_IMAGE_BACKUP, QMessageBox::Ok);
+    }
+    else QMessageBox::warning(this, APP_NAME, CANNOT_CREATE_TEMP_DIR, QMessageBox::Ok);
+}
+
 void Dialog::on_newFromClipboardAction_triggered() {
     dialog = new Dialog;
     dialog->show();
 }
-
-

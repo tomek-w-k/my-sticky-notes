@@ -12,12 +12,18 @@
 #include <QMenu>
 #include <QGraphicsScene>
 #include <QDir>
+#include <QFile>
+#include <QMessageBox>
 
 #include "dialoginstanceproperties.h"
 
 
+const QString APP_NAME = "MyStickyNotes";
 const QString MY_STICKY_NOTES_DIR_RELATIVE = ".my-sticky-notes";
 const QString MY_STICKY_NOTES_DIR_TEMP_RELATIVE = "temp";
+const QString CANNOT_CREATE_TEMP_DIR = "Cannot create temp directory. Image backup will not be saved.";
+const QString CANNOT_SAVE_IMAGE_BACKUP = "An error has occurred. Image backup cannot be saved.";
+const QString CANNOT_REMOVE_IMAGE_BACKUP = "An error has occurred. Image backup file cannot be removed.";
 
 using namespace std;
 
@@ -38,9 +44,10 @@ private:
     void setMainImage();
     QList<DialogInstanceProperties*>* getDialogInstancePropertiesList();
     optional<QDir> getTempDir();
+    void saveMainImageToTempDir();
 
 private slots:
-    void on_newFromClipboardAction_triggered();
+    void on_newFromClipboardAction_triggered();    
 
 private:
     static QList<DialogInstanceProperties*>* dialogInstancePropertiesList;
@@ -50,6 +57,7 @@ private:
     Dialog* dialog;
     QGraphicsScene* graphicsScene;
     optional<QDir> tempDirOptional;
+    QString imageBackupFilePath;
 };
 
 #endif // DIALOG_H
