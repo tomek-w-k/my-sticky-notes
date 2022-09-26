@@ -6,6 +6,7 @@ Dialog::Dialog() : ui(new Ui::Dialog) {
     ui->setupUi(this);
 
     this->setAttribute(Qt::WA_DeleteOnClose);
+    this->setWindowFlags(Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
     this->dialogInstancePropertiesList = getDialogInstancePropertiesList();
     this->dialogInstanceProperties = new DialogInstanceProperties(this);
     dialogInstancePropertiesList->append(this->dialogInstanceProperties);
