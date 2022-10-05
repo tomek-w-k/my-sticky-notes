@@ -14,7 +14,8 @@ Dialog::Dialog() : ui(new Ui::Dialog) {
     this->tempDirOptional = getTempDir();
 
     setRandomWindowIcon();
-    setMainImage();
+    setImageFromClipboard();
+    setContent();
     saveMainImageToTempDir();
 }
 
@@ -69,7 +70,26 @@ void Dialog::setRandomWindowIcon() {
     }
 }
 
-void Dialog::setMainImage() {
+void Dialog::setContent() {
+    if (!QGuiApplication::clipboard()->pixmap().isNull()) {
+        QPixmap pixmap = QGuiApplication::clipboard()->pixmap();
+
+        this->window()->setFixedSize(pixmap.size());
+        this->graphicsScene->addPixmap(pixmap);
+    }
+    else {
+        this->graphicsScene->addSimpleText(NO_IMAGE_IN_CLIPBOARD);
+
+        int graphicsViewWidth = this->graphicsScene->sceneRect().width() + 200;
+        int graphicsViewHeight = this->graphicsScene->sceneRect().height() + 100;
+
+        ui->graphicsView->setFixedSize(graphicsViewWidth, graphicsViewHeight);
+    }
+
+    ui->graphicsView->setScene(this->graphicsScene);
+}
+
+void Dialog::setImageFromClipboard() {
     QPixmap pixmap = QGuiApplication::clipboard()->pixmap();
 
     this->window()->setFixedSize(pixmap.size());

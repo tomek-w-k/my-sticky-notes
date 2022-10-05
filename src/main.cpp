@@ -1,6 +1,7 @@
-#include "dialog.h"
 #include <QApplication>
 #include <QList>
+
+#include "dialog.h"
 
 
 QList<DialogInstanceProperties*>* Dialog::dialogInstancePropertiesList = 0;
