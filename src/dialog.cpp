@@ -43,6 +43,9 @@ Dialog::~Dialog() {
 void Dialog::contextMenuEvent(QContextMenuEvent *event) {
     QMenu contextMenu(this);
     contextMenu.addAction(ui->newFromClipboardAction);
+    contextMenu.addSeparator();
+    contextMenu.addAction(ui->copyAction);
+
     contextMenu.exec(event->globalPos());
 }
 
@@ -128,3 +131,9 @@ void Dialog::on_newFromClipboardAction_triggered() {
     dialog = new Dialog;
     dialog->show();
 }
+
+void Dialog::on_copyAction_triggered() {
+    QImage image = ui->graphicsView->grab().toImage();
+    QGuiApplication::clipboard()->setImage(image);
+}
+

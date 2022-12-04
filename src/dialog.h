@@ -43,7 +43,9 @@ private:
     void saveMainImageToTempDir();
 
 private slots:
-    void on_newFromClipboardAction_triggered();    
+    void on_newFromClipboardAction_triggered();
+
+    void on_copyAction_triggered();
 
 private:
     static QList<DialogInstanceProperties*>* dialogInstancePropertiesList;
