@@ -12,6 +12,7 @@ class DialogInstanceProperties : public QObject {
     Q_OBJECT
 public:
     DialogInstanceProperties(QWidget* parent = nullptr);
+    DialogInstanceProperties(QUuid id, QWidget* parent = nullptr);
     const QUuid &getId() const;
     QDialog *getPtr() const;
 

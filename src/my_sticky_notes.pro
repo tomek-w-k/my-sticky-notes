@@ -27,11 +27,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         dialoginstanceproperties.cpp \
         main.cpp \
-        dialog.cpp
+        dialog.cpp \
+        utils.cpp
 
 HEADERS += \
+        constants.h \
         dialog.h \
-        dialoginstanceproperties.h
+        dialoginstanceproperties.h \
+        utils.h
 
 FORMS += \
         dialog.ui

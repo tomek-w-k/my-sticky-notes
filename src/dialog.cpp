@@ -2,30 +2,38 @@
 #include "ui_dialog.h"
 
 
-Dialog::Dialog() : ui(new Ui::Dialog) {
+Dialog::Dialog(QFile imageFile) : ui(new Ui::Dialog) {
     ui->setupUi(this);
 
     this->setAttribute(Qt::WA_DeleteOnClose);
     this->setWindowFlags(Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
-    this->dialogInstancePropertiesList = getDialogInstancePropertiesList();
-    this->dialogInstanceProperties = new DialogInstanceProperties(this);
-    dialogInstancePropertiesList->append(this->dialogInstanceProperties);
     this->graphicsScene = new QGraphicsScene(this);
-    this->tempDirOptional = getTempDir();
+    this->tempDirOptional = Utils::getTempDir();
+    this->dialogInstancePropertiesList = getDialogInstancePropertiesList();
 
-    setRandomWindowIcon();
-    setImageFromClipboard();
-    setContent();
-    saveMainImageToTempDir();
+    setRandomWindowIcon();          
+
+    if (imageFile.fileName().isNull())
+        setContentFromClipboard();
+    else {
+        QString simpleFileName = QFileInfo(imageFile.fileName()).fileName().remove(BACKUP_FILE_EXTENSION);
+
+        this->dialogInstanceProperties = new DialogInstanceProperties(QUuid(simpleFileName), this);
+        this->imageBackupFilePath = imageFile.fileName();
+
+        setContentFromBackupFile();
+    }
+
+    dialogInstancePropertiesList->append(this->dialogInstanceProperties);
 }
 
 Dialog::~Dialog() {    
     this->dialogInstancePropertiesList->removeOne(this->dialogInstanceProperties);
-
     delete ui;
 
     QFile imageBackupFile(this->imageBackupFilePath);
-    if (!imageBackupFile.remove())
+
+    if (imageBackupFile.exists() && !imageBackupFile.remove())
         QMessageBox::warning(this, APP_NAME, CANNOT_REMOVE_IMAGE_BACKUP, QMessageBox::Ok);
 
     if (this->dialogInstancePropertiesList->isEmpty())
@@ -70,12 +78,17 @@ void Dialog::setRandomWindowIcon() {
     }
 }
 
-void Dialog::setContent() {
-    if (!QGuiApplication::clipboard()->pixmap().isNull()) {
-        QPixmap pixmap = QGuiApplication::clipboard()->pixmap();
+void Dialog::setContent(QPixmap pixmap) {
+    this->window()->setFixedSize(pixmap.size());
+    this->graphicsScene->addPixmap(pixmap);
+    ui->graphicsView->setScene(this->graphicsScene);
+}
 
-        this->window()->setFixedSize(pixmap.size());
-        this->graphicsScene->addPixmap(pixmap);
+void Dialog::setContentFromClipboard() {
+    if (!QGuiApplication::clipboard()->pixmap().isNull()) {
+        this->dialogInstanceProperties = new DialogInstanceProperties(this);
+        setContent(QGuiApplication::clipboard()->pixmap());
+        saveMainImageToTempDir();
     }
     else {
         this->graphicsScene->addSimpleText(NO_IMAGE_IN_CLIPBOARD);
@@ -83,18 +96,13 @@ void Dialog::setContent() {
         int graphicsViewWidth = this->graphicsScene->sceneRect().width() + 200;
         int graphicsViewHeight = this->graphicsScene->sceneRect().height() + 100;
 
-        ui->graphicsView->setFixedSize(graphicsViewWidth, graphicsViewHeight);
+        this->window()->setFixedSize(graphicsViewWidth, graphicsViewHeight);
+        ui->graphicsView->setScene(this->graphicsScene);
     }
-
-    ui->graphicsView->setScene(this->graphicsScene);
 }
 
-void Dialog::setImageFromClipboard() {
-    QPixmap pixmap = QGuiApplication::clipboard()->pixmap();
-
-    this->window()->setFixedSize(pixmap.size());
-    this->graphicsScene->addPixmap(pixmap);
-    ui->graphicsView->setScene(this->graphicsScene);
+void Dialog::setContentFromBackupFile() {
+    setContent(QPixmap(this->imageBackupFilePath));
 }
 
 QList<DialogInstanceProperties*> *Dialog::getDialogInstancePropertiesList() {
@@ -104,18 +112,9 @@ QList<DialogInstanceProperties*> *Dialog::getDialogInstancePropertiesList() {
     return this->dialogInstancePropertiesList;
 }
 
-optional<QDir> Dialog::getTempDir() {
-    QDir tempDir = QDir::home().filePath(MY_STICKY_NOTES_DIR_RELATIVE);
-    tempDir = tempDir.filePath(MY_STICKY_NOTES_DIR_TEMP_RELATIVE);
-
-    if (tempDir.mkpath(tempDir.path()))
-        return tempDir;
-    else return nullopt;
-}
-
 void Dialog::saveMainImageToTempDir() {
     if (this->tempDirOptional) {
-        QString fileName = this->dialogInstanceProperties->getId().toString(QUuid::WithoutBraces) + ".png";
+        QString fileName = this->dialogInstanceProperties->getId().toString(QUuid::WithoutBraces) + BACKUP_FILE_EXTENSION;
         this->imageBackupFilePath = tempDirOptional.value().filePath(fileName);
         QPixmap pixmap = ui->graphicsView->grab();
 
