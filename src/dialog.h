@@ -14,6 +14,7 @@
 #include <QDir>
 #include <QFile>
 #include <QMessageBox>
+#include <QFileDialog>
 
 #include "dialoginstanceproperties.h"
 #include "constants.h"
@@ -31,7 +32,7 @@ class Dialog : public QDialog {
 
 public:
     explicit Dialog(QFile imageFile = QFile());
-    ~Dialog();
+    ~Dialog();    
     void contextMenuEvent(QContextMenuEvent* event);
 
 private:
@@ -46,6 +47,8 @@ private slots:
     void on_newFromClipboardAction_triggered();
 
     void on_copyAction_triggered();
+
+    void on_saveAsAction_triggered();
 
 private:
     static QList<DialogInstanceProperties*>* dialogInstancePropertiesList;

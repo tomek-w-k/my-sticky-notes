@@ -9,7 +9,10 @@ Dialog::Dialog(QFile imageFile) : ui(new Ui::Dialog) {
     this->setWindowFlags(Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
     this->graphicsScene = new QGraphicsScene(this);
     this->tempDirOptional = Utils::getTempDir();
+    this->dialogInstanceProperties = nullptr;
     this->dialogInstancePropertiesList = getDialogInstancePropertiesList();
+
+    this->installEventFilter(this);
 
     setRandomWindowIcon();          
 
@@ -45,6 +48,13 @@ void Dialog::contextMenuEvent(QContextMenuEvent *event) {
     contextMenu.addAction(ui->newFromClipboardAction);
     contextMenu.addSeparator();
     contextMenu.addAction(ui->copyAction);
+    contextMenu.addSeparator();
+    contextMenu.addAction(ui->saveAsAction);
+
+    if (this->dialogInstanceProperties == nullptr) {
+        ui->saveAsAction->setDisabled(true);
+        ui->copyAction->setDisabled(true);
+    }
 
     contextMenu.exec(event->globalPos());
 }
@@ -135,5 +145,14 @@ void Dialog::on_newFromClipboardAction_triggered() {
 void Dialog::on_copyAction_triggered() {
     QImage image = ui->graphicsView->grab().toImage();
     QGuiApplication::clipboard()->setImage(image);
+}
+
+void Dialog::on_saveAsAction_triggered() {
+    QImage image = ui->graphicsView->grab().toImage();
+    QString fileName = QDir::home().filePath(QDateTime::currentDateTime().toString("yyyy-MM-dd-HHmmsszzz"));
+    QString filePath = QFileDialog::getSaveFileName(this, SAVE_NOTE_DIALOG_TITLE, fileName, "Images (*.png)");
+
+    if (!filePath.isEmpty())
+        image.save(filePath);
 }
 

@@ -17,5 +17,6 @@ const QString NO_IMAGE_IN_CLIPBOARD = "No image in clipboard";
 const QString BACKUP_FILE_EXTENSION = ".png";
 const QString LOCK_FILE = ".my-sticky-notes";
 const QString RESTORE_LAST_SESSION = "This application has been closed unexpectedly.\nRestore last session?";
+const QString SAVE_NOTE_DIALOG_TITLE = "Save note as";
 
 #endif // CONSTANTS_H
