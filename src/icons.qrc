@@ -7,5 +7,6 @@
         <file>icons/purple_sticky_note.png</file>
         <file>icons/red_sticky_note.png</file>
         <file>icons/yellow_sticky_note.png</file>
+        <file>icons/main_icon2.png</file>
     </qresource>
 </RCC>

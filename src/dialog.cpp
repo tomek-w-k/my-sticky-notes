@@ -50,6 +50,8 @@ void Dialog::contextMenuEvent(QContextMenuEvent *event) {
     contextMenu.addAction(ui->copyAction);
     contextMenu.addSeparator();
     contextMenu.addAction(ui->saveAsAction);
+    contextMenu.addSeparator();
+    contextMenu.addAction(ui->aboutAction);
 
     if (this->dialogInstanceProperties == nullptr) {
         ui->saveAsAction->setDisabled(true);
@@ -154,5 +156,23 @@ void Dialog::on_saveAsAction_triggered() {
 
     if (!filePath.isEmpty())
         image.save(filePath);
+}
+
+void Dialog::on_aboutAction_triggered() {
+    QString buildDateTime = QString("%1 %2").arg(__DATE__).arg(__TIME__);
+    QString content = QString("<b>%1 %2</b><br><br>%3<br><br>%4<br><br><br>%5")
+                          .arg(APP_NAME)
+                          .arg(APP_VERSION)
+                          .arg("Based on Qt 6.2.4")
+                          .arg("Built on " + buildDateTime)
+                          .arg("Copyright 2022 T. Wąsik. All rights reserved.");
+
+    QMessageBox msgBox = QMessageBox();
+    msgBox.setIconPixmap(QPixmap(":/new/prefix1/icons/main_icon2.png").scaledToHeight(64, Qt::SmoothTransformation));
+    msgBox.setWindowTitle("About");
+    msgBox.setText(content);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+
+    msgBox.exec();
 }
 

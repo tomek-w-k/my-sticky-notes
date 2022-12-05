@@ -97,6 +97,14 @@
     <string>Save as</string>
    </property>
   </action>
+  <action name="aboutAction">
+   <property name="text">
+    <string>About...</string>
+   </property>
+   <property name="toolTip">
+    <string>About</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

@@ -50,6 +50,8 @@ private slots:
 
     void on_saveAsAction_triggered();
 
+    void on_aboutAction_triggered();
+
 private:
     static QList<DialogInstanceProperties*>* dialogInstancePropertiesList;
     DialogInstanceProperties* dialogInstanceProperties;
