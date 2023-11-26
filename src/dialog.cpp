@@ -60,6 +60,7 @@ void Dialog::contextMenuEvent(QContextMenuEvent *event) {
     contextMenu.addAction(ui->saveAsAction);
     contextMenu.addSeparator();
     contextMenu.addAction(ui->closeAllAction);
+    contextMenu.addAction(ui->terminateApplicationAction);
     contextMenu.addSeparator();
     contextMenu.addAction(ui->aboutAction);
 
@@ -192,6 +193,13 @@ void Dialog::on_closeAllAction_triggered() {
 
     if (msgBox.exec() == QMessageBox::Yes)
         QApplication::quit();
+}
+
+void Dialog::on_terminateApplicationAction_triggered() {
+    QMessageBox msgBox(QMessageBox::Question, APP_NAME, ARE_YOU_SURE_TERMINATE_APP, QMessageBox::Yes | QMessageBox::No);
+
+    if (msgBox.exec() == QMessageBox::Yes)
+        QApplication::exit(0);
 }
 
 void Dialog::on_aboutAction_triggered() {

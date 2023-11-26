@@ -113,6 +113,14 @@
     <string>Closes all notes</string>
    </property>
   </action>
+  <action name="terminateApplicationAction">
+   <property name="text">
+    <string>Terminate application...</string>
+   </property>
+   <property name="toolTip">
+    <string>Terminates the application</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
