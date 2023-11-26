@@ -4,6 +4,7 @@
 #include <QString>
 
 
+const QString COMPANY = "tw";
 const QString APP_NAME = "MyStickyNotes";
 const QString APP_VERSION = "2.0";
 const QString APP_EXEC_FILE_NAME = "my-sticky-notes";
@@ -19,5 +20,7 @@ const QString BACKUP_FILE_EXTENSION = ".png";
 const QString LOCK_FILE = ".my-sticky-notes";
 const QString RESTORE_LAST_SESSION = "This application has been closed unexpectedly.\nRestore last session?";
 const QString SAVE_NOTE_DIALOG_TITLE = "Save note as";
+const QString DIALOG_POSITIONS_SETTINGS_GROUP = "dialog_positions";
+const QString NULL_UUID_STRING = "{00000000-0000-0000-0000-000000000000}";
 
 #endif // CONSTANTS_H

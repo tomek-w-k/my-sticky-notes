@@ -8,13 +8,15 @@ Dialog::Dialog(QFile imageFile) : ui(new Ui::Dialog) {
     this->setAttribute(Qt::WA_DeleteOnClose);
     this->setWindowFlags(Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
     this->graphicsScene = new QGraphicsScene(this);
+    this->settings = new QSettings(COMPANY, APP_NAME);
     this->tempDirOptional = Utils::getTempDir();
     this->dialogInstanceProperties = nullptr;
     this->dialogInstancePropertiesList = getDialogInstancePropertiesList();
+    this->dialogPositionKey = "";
 
     this->installEventFilter(this);
 
-    setRandomWindowIcon();          
+    setRandomWindowIcon();
 
     if (imageFile.fileName().isNull())
         setContentFromClipboard();
@@ -23,6 +25,7 @@ Dialog::Dialog(QFile imageFile) : ui(new Ui::Dialog) {
 
         this->dialogInstanceProperties = new DialogInstanceProperties(QUuid(simpleFileName), this);
         this->imageBackupFilePath = imageFile.fileName();
+        this->dialogPositionKey = DIALOG_POSITIONS_SETTINGS_GROUP + "/" + this->dialogInstanceProperties->getId().toString(QUuid::WithoutBraces);
 
         setContentFromBackupFile();
     }
@@ -30,7 +33,10 @@ Dialog::Dialog(QFile imageFile) : ui(new Ui::Dialog) {
     dialogInstancePropertiesList->append(this->dialogInstanceProperties);
 }
 
-Dialog::~Dialog() {    
+Dialog::~Dialog() {
+    if (this->settings->contains(dialogPositionKey) && !this->dialogInstanceProperties->getId().isNull())
+        this->settings->remove(dialogPositionKey);
+
     this->dialogInstancePropertiesList->removeOne(this->dialogInstanceProperties);
     delete ui;
 
@@ -41,6 +47,8 @@ Dialog::~Dialog() {
 
     if (this->dialogInstancePropertiesList->isEmpty())
         delete this->dialogInstancePropertiesList;
+
+    delete this->settings;
 }
 
 void Dialog::contextMenuEvent(QContextMenuEvent *event) {
@@ -59,6 +67,14 @@ void Dialog::contextMenuEvent(QContextMenuEvent *event) {
     }
 
     contextMenu.exec(event->globalPos());
+}
+
+bool Dialog::eventFilter(QObject* object, QEvent* event) {
+    if (lastEvent == QEvent::Move && event->type() == QEvent::NonClientAreaMouseButtonRelease)
+        saveDialogPosition();
+
+    lastEvent = event->type();
+    return QDialog::eventFilter(object, event);
 }
 
 void Dialog::setRandomWindowIcon() {
@@ -97,15 +113,19 @@ void Dialog::setContent(QPixmap pixmap) {
     this->window()->setFixedSize(pixmap.size());
     this->graphicsScene->addPixmap(pixmap);
     ui->graphicsView->setScene(this->graphicsScene);
+    this->show();
 }
 
 void Dialog::setContentFromClipboard() {
     if (!QGuiApplication::clipboard()->pixmap().isNull()) {
         this->dialogInstanceProperties = new DialogInstanceProperties(this);
+        this->dialogPositionKey = DIALOG_POSITIONS_SETTINGS_GROUP + "/" + this->dialogInstanceProperties->getId().toString(QUuid::WithoutBraces);
         setContent(QGuiApplication::clipboard()->pixmap());
         saveMainImageToTempDir();
+        saveDialogPosition();
     }
     else {
+        this->dialogInstanceProperties = new DialogInstanceProperties(QUuid(NULL_UUID_STRING), this);
         this->graphicsScene->addSimpleText(NO_IMAGE_IN_CLIPBOARD);
 
         int graphicsViewWidth = this->graphicsScene->sceneRect().width() + 200;
@@ -113,11 +133,13 @@ void Dialog::setContentFromClipboard() {
 
         this->window()->setFixedSize(graphicsViewWidth, graphicsViewHeight);
         ui->graphicsView->setScene(this->graphicsScene);
+        this->show();
     }
 }
 
 void Dialog::setContentFromBackupFile() {
     setContent(QPixmap(this->imageBackupFilePath));
+    this->move(this->settings->value(this->dialogPositionKey).toPoint());
 }
 
 QList<DialogInstanceProperties*> *Dialog::getDialogInstancePropertiesList() {
@@ -137,6 +159,11 @@ void Dialog::saveMainImageToTempDir() {
             QMessageBox::warning(this, APP_NAME, CANNOT_SAVE_IMAGE_BACKUP, QMessageBox::Ok);
     }
     else QMessageBox::warning(this, APP_NAME, CANNOT_CREATE_TEMP_DIR, QMessageBox::Ok);
+}
+
+void Dialog::saveDialogPosition() {
+    if (!this->dialogInstanceProperties->getId().isNull())
+        this->settings->setValue(this->dialogPositionKey, this->pos());
 }
 
 void Dialog::on_newFromClipboardAction_triggered() {

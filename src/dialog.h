@@ -1,6 +1,7 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 
+#include <QObject>
 #include <QDialog>
 #include <QClipboard>
 #include <QImage>
@@ -9,12 +10,14 @@
 #include <QIcon>
 #include <QString>
 #include <QContextMenuEvent>
+#include <QEvent>
 #include <QMenu>
 #include <QGraphicsScene>
 #include <QDir>
 #include <QFile>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QSettings>
 
 #include "dialoginstanceproperties.h"
 #include "constants.h"
@@ -34,6 +37,7 @@ public:
     explicit Dialog(QFile imageFile = QFile());
     ~Dialog();    
     void contextMenuEvent(QContextMenuEvent* event);
+    bool eventFilter(QObject* object, QEvent* event);
 
 private:
     void setRandomWindowIcon();
@@ -42,6 +46,7 @@ private:
     void setContentFromBackupFile();
     QList<DialogInstanceProperties*>* getDialogInstancePropertiesList();    
     void saveMainImageToTempDir();
+    void saveDialogPosition();
 
 private slots:
     void on_newFromClipboardAction_triggered();
@@ -60,6 +65,9 @@ private:
     QGraphicsScene* graphicsScene;
     optional<QDir> tempDirOptional;
     QString imageBackupFilePath;
+    QString dialogPositionKey;
+    QSettings* settings;
+    int lastEvent;
 };
 
 #endif // DIALOG_H

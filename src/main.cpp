@@ -17,10 +17,8 @@ int main(int argc, char *argv[]) {
     Dialog* window;
     QStringList backupFilePathList = Utils::getBackupFilePaths();
 
-    if (backupFilePathList.isEmpty() || Utils::otherApplicationInstanceIsRunning()) {
+    if (backupFilePathList.isEmpty() || Utils::otherApplicationInstanceIsRunning())
         window = new Dialog;
-        window->show();
-    }
     else {
         QMessageBox msgBox(QMessageBox::Question, APP_NAME, RESTORE_LAST_SESSION, QMessageBox::Yes | QMessageBox::No);
 
@@ -33,6 +31,9 @@ int main(int argc, char *argv[]) {
                 break;
 
             case QMessageBox::No:
+                QSettings settings(COMPANY, APP_NAME);
+                settings.remove(DIALOG_POSITIONS_SETTINGS_GROUP);
+
                 foreach (QString filePath, backupFilePathList) {
                     QFile imageBackupFile(filePath);
 
