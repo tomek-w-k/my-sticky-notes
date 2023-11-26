@@ -64,6 +64,8 @@ void Dialog::contextMenuEvent(QContextMenuEvent *event) {
     contextMenu.addSeparator();
     contextMenu.addAction(ui->aboutAction);
 
+    contextMenu.setToolTipsVisible(true);
+
     if (this->dialogInstanceProperties == nullptr) {
         ui->saveAsAction->setDisabled(true);
         ui->copyAction->setDisabled(true);

@@ -83,10 +83,16 @@
    <property name="text">
     <string>New from clipboard...</string>
    </property>
+   <property name="toolTip">
+    <string>Creates a new note with an image from clipboard</string>
+   </property>
   </action>
   <action name="copyAction">
    <property name="text">
     <string>Copy</string>
+   </property>
+   <property name="toolTip">
+    <string>Copies the note image to the clipboard</string>
    </property>
   </action>
   <action name="saveAsAction">
@@ -94,7 +100,7 @@
     <string>Save as...</string>
    </property>
    <property name="toolTip">
-    <string>Save as</string>
+    <string>Saves the note image to a file</string>
    </property>
   </action>
   <action name="aboutAction">
@@ -102,7 +108,7 @@
     <string>About...</string>
    </property>
    <property name="toolTip">
-    <string>About</string>
+    <string>Shows information about the application</string>
    </property>
   </action>
   <action name="closeAllAction">
