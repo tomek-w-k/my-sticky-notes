@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
                 window = new Dialog();
                 window->show();
                 break;
-            }
+        }
     }
 
     return a.exec();

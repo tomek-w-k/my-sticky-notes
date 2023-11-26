@@ -50,11 +50,9 @@ private:
 
 private slots:
     void on_newFromClipboardAction_triggered();
-
     void on_copyAction_triggered();
-
     void on_saveAsAction_triggered();
-
+    void on_closeAllAction_triggered();
     void on_aboutAction_triggered();
 
 private:

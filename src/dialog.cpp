@@ -59,6 +59,8 @@ void Dialog::contextMenuEvent(QContextMenuEvent *event) {
     contextMenu.addSeparator();
     contextMenu.addAction(ui->saveAsAction);
     contextMenu.addSeparator();
+    contextMenu.addAction(ui->closeAllAction);
+    contextMenu.addSeparator();
     contextMenu.addAction(ui->aboutAction);
 
     if (this->dialogInstanceProperties == nullptr) {
@@ -185,6 +187,13 @@ void Dialog::on_saveAsAction_triggered() {
         image.save(filePath);
 }
 
+void Dialog::on_closeAllAction_triggered() {
+    QMessageBox msgBox(QMessageBox::Question, APP_NAME, ARE_YOU_SURE_CLOSE_APP, QMessageBox::Yes | QMessageBox::No);
+
+    if (msgBox.exec() == QMessageBox::Yes)
+        QApplication::quit();
+}
+
 void Dialog::on_aboutAction_triggered() {
     QString buildDateTime = QString("%1 %2").arg(__DATE__).arg(__TIME__);
     QString content = QString("<b>%1 %2</b><br><br>%3<br><br>%4<br><br><br>%5")
@@ -202,4 +211,3 @@ void Dialog::on_aboutAction_triggered() {
 
     msgBox.exec();
 }
-
