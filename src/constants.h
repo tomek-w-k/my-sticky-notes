@@ -6,7 +6,7 @@
 
 const QString COMPANY = "tw";
 const QString APP_NAME = "MyStickyNotes";
-const QString APP_VERSION = "2.0";
+const QString APP_VERSION = "2.1";
 const QString APP_EXEC_FILE_NAME = "my-sticky-notes";
 const QString APP_EXEC_FILE_EXTENSION = ".exe";
 const QString MY_STICKY_NOTES_DIR_RELATIVE = ".my-sticky-notes";

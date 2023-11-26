@@ -207,13 +207,14 @@ void Dialog::on_terminateApplicationAction_triggered() {
 }
 
 void Dialog::on_aboutAction_triggered() {
-    QString buildDateTime = QString("%1 %2").arg(__DATE__).arg(__TIME__);
+    QString buildDate = QString(__DATE__);
+    QString buildDateTime = QString("%1 %2").arg(buildDate).arg(__TIME__);
     QString content = QString("<b>%1 %2</b><br><br>%3<br><br>%4<br><br><br>%5")
                           .arg(APP_NAME)
                           .arg(APP_VERSION)
-                          .arg("Based on Qt 6.2.4")
+                          .arg("Based on Qt " + QString(QT_VERSION_STR))
                           .arg("Built on " + buildDateTime)
-                          .arg("Copyright 2022 T. Wąsik. All rights reserved.");
+                          .arg("Copyright " + buildDate.right(4) + " T. Wąsik. All rights reserved.");
 
     QMessageBox msgBox = QMessageBox();
     msgBox.setIconPixmap(QPixmap(":/new/prefix1/icons/main_icon2.png").scaledToHeight(64, Qt::SmoothTransformation));
