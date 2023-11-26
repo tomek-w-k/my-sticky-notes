@@ -66,9 +66,11 @@ void Dialog::contextMenuEvent(QContextMenuEvent *event) {
 
     contextMenu.setToolTipsVisible(true);
 
-    if (this->dialogInstanceProperties == nullptr) {
+    if (this->dialogInstanceProperties->getId().isNull()) {
         ui->saveAsAction->setDisabled(true);
         ui->copyAction->setDisabled(true);
+        ui->closeAllAction->setDisabled(true);
+        ui->terminateApplicationAction->setDisabled(true);
     }
 
     contextMenu.exec(event->globalPos());
