@@ -9,12 +9,16 @@ Dialog::Dialog(QFile imageFile) : ui(new Ui::Dialog) {
     this->setWindowFlags(Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
     this->graphicsScene = new QGraphicsScene(this);
     this->settings = new QSettings(COMPANY, APP_NAME);
+    this->dialogMoveTimer = new QTimer(this);
     this->tempDirOptional = Utils::getTempDir();
     this->dialogInstanceProperties = nullptr;
     this->dialogInstancePropertiesList = getDialogInstancePropertiesList();
     this->dialogPositionKey = "";
+    this->dialogMoveEventCounter = 0;
 
     this->installEventFilter(this);
+
+    connect(this->dialogMoveTimer, SIGNAL(timeout()), this, SLOT(handleDialogMoveTimeout()));
 
     setRandomWindowIcon();
 
@@ -76,11 +80,31 @@ void Dialog::contextMenuEvent(QContextMenuEvent *event) {
     contextMenu.exec(event->globalPos());
 }
 
+void Dialog::handleDialogMoveTimeout() {
+    if (this->dialogMoveEventCounter >= 102)
+        this->dialogMoveEventCounter = 2;
+
+    this->dialogMoveTimer->stop();
+    saveDialogPosition();
+}
+
 bool Dialog::eventFilter(QObject* object, QEvent* event) {
+    #ifdef Q_OS_WIN
     if (lastEvent == QEvent::Move && event->type() == QEvent::NonClientAreaMouseButtonRelease)
         saveDialogPosition();
 
     lastEvent = event->type();
+    #endif
+
+    #ifdef Q_OS_LINUX
+    if (event->type() == QEvent::Move && event->spontaneous()) {
+        this->dialogMoveEventCounter++;
+
+        if (this->dialogMoveEventCounter > 2)
+            this->dialogMoveTimer->start(200);
+    }
+    #endif
+
     return QDialog::eventFilter(object, event);
 }
 
@@ -170,7 +194,13 @@ void Dialog::saveMainImageToTempDir() {
 
 void Dialog::saveDialogPosition() {
     if (!this->dialogInstanceProperties->getId().isNull())
+        #ifdef Q_OS_WIN
         this->settings->setValue(this->dialogPositionKey, this->pos());
+        #endif
+
+        #ifdef Q_OS_LINUX
+        this->settings->setValue(this->dialogPositionKey, this->geometry().topLeft());
+        #endif
 }
 
 void Dialog::on_newFromClipboardAction_triggered() {

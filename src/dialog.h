@@ -18,6 +18,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QSettings>
+#include <QTimer>
 
 #include "dialoginstanceproperties.h"
 #include "constants.h"
@@ -56,6 +57,8 @@ private slots:
     void on_terminateApplicationAction_triggered();
     void on_aboutAction_triggered();
 
+    void handleDialogMoveTimeout();
+
 private:
     static QList<DialogInstanceProperties*>* dialogInstancePropertiesList;
     DialogInstanceProperties* dialogInstanceProperties;
@@ -67,6 +70,8 @@ private:
     QString dialogPositionKey;
     QSettings* settings;
     int lastEvent;
+    int dialogMoveEventCounter;
+    QTimer* dialogMoveTimer;
 };
 
 #endif // DIALOG_H
